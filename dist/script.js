@@ -16,13 +16,14 @@ const temp_c = document.getElementById("temp_c");
 const temp_f = document.getElementById("temp_f");
 const feelslike_f = document.getElementById("feelslike_f");
 const last_updated = document.getElementById("last_updated");
+const forecast = document.getElementById("forecast");
 
-const getWather = (city) => {
+const getWeather = (city) => {
   cityname.innerHTML = city;
   fetch(
-    `https://weatherapi-com.p.rapidapi.com/current.json?q=${encodeURIComponent(
+    `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${encodeURIComponent(
       city
-    )}`,
+    )}&days=5`, // Fetching 5-day forecast
     options
   )
     .then((response) => response.json())
@@ -36,17 +37,38 @@ const getWather = (city) => {
       temp_f.innerHTML = response.current.temp_f;
       feelslike_f.innerHTML = response.current.feelslike_f;
       last_updated.innerHTML = response.current.last_updated;
+
+      // Display forecast data
+      forecast.innerHTML = ""; // Clear previous forecast
+      response.forecast.forecastday.forEach((day) => {
+        const date = day.date;
+        const avgTempC = day.day.avgtemp_c;
+        const condition = day.day.condition.text;
+        const conditionIcon = day.day.condition.icon;
+
+        const forecastHtml = `
+          <div>
+            <h3>${date}</h3>
+            <p>Average Temperature: ${avgTempC} °C</p>
+            <p>Condition: ${condition}</p>
+            <img src="${conditionIcon}" alt="${condition}" />
+          </div>
+        `;
+        forecast.innerHTML += forecastHtml;
+      });
     })
     .catch((err) => console.error(err));
 };
 
 submit.addEventListener("click", (e) => {
   e.preventDefault();
-  getWather(city.value);
+  getWeather(city.value);
 });
-getWather("delhi");
+
+getWeather("delhi");
 
 // using current location
+// Using current location
 function getWeatherForCurrentLocation() {
   cityname.innerHTML = "Current Location";
   if (navigator.geolocation) {
@@ -62,7 +84,7 @@ function successCallback(position) {
 
   // Fetch weather data using the current location
   fetch(
-    `https://weatherapi-com.p.rapidapi.com/current.json?q=${latitude},${longitude}`,
+    `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${latitude},${longitude}&days=5`, // Fetching 5-day forecast
     options
   )
     .then((response) => response.json())
@@ -76,6 +98,25 @@ function successCallback(position) {
       temp_f.innerHTML = response.current.temp_f;
       feelslike_f.innerHTML = response.current.feelslike_f;
       last_updated.innerHTML = response.current.last_updated;
+
+      // Display forecast data
+      forecast.innerHTML = ""; // Clear previous forecast
+      response.forecast.forecastday.forEach((day) => {
+        const date = day.date;
+        const avgTempC = day.day.avgtemp_c;
+        const condition = day.day.condition.text;
+        const conditionIcon = day.day.condition.icon;
+
+        const forecastHtml = `
+          <div>
+            <h3>${date}</h3>
+            <p>Average Temperature: ${avgTempC} °C</p>
+            <p>Condition: ${condition}</p>
+            <img src="${conditionIcon}" alt="${condition}" />
+          </div>
+        `;
+        forecast.innerHTML += forecastHtml;
+      });
     })
     .catch((err) => console.error(err));
 }
