@@ -13,7 +13,11 @@ This is a simple weather application that allows users to check the current weat
 
 1. **Clone the repository**
 
-   ```bash
+   bash
    git clone https://github.com/krishna-ig/Weather-App
 
-   ```
+## Usage
+
+-Enter a city name in the input field and click "Get Weather" to see the current weather and 5-day forecast.
+-Select a city from the dropdown menu to quickly view weather information for recently searched cities.
+-Click "Use Current Location" to fetch weather information for your current location.
