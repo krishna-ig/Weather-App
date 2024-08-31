@@ -18,6 +18,45 @@ const feelslike_f = document.getElementById("feelslike_f");
 const last_updated = document.getElementById("last_updated");
 const forecast = document.getElementById("forecast");
 
+const submit = document.getElementById("submit");
+const recentCitiesDropdown = document.getElementById("recent-cities");
+
+// Check if there are any recent cities in localStorage and populate the dropdown
+function initializeRecentCities() {
+  const recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
+  if (recentCities.length > 0) {
+    recentCitiesDropdown.style.display = "block"; // Show dropdown if there are recent cities
+    recentCities.forEach((city) => {
+      addCityToDropdown(city);
+    });
+  }
+}
+
+// Add city to dropdown and local storage
+function addCityToDropdown(city) {
+  // Check if the city is already in the dropdown
+  if (
+    [...recentCitiesDropdown.options].some((option) => option.value === city)
+  ) {
+    return;
+  }
+
+  // Add the city to the dropdown
+  const option = document.createElement("option");
+  option.value = city;
+  option.textContent = city;
+  recentCitiesDropdown.appendChild(option);
+
+  // Save the city to local storage
+  let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
+  recentCities.push(city);
+  // Keep only the latest 5 cities
+  if (recentCities.length > 5) {
+    recentCities.shift();
+  }
+  localStorage.setItem("recentCities", JSON.stringify(recentCities));
+}
+
 const getWeather = (city) => {
   cityname.innerHTML = city;
   fetch(
@@ -56,6 +95,8 @@ const getWeather = (city) => {
         `;
         forecast.innerHTML += forecastHtml;
       });
+      // Add the city to the recently searched list
+      addCityToDropdown(city);
     })
     .catch((err) => console.error(err));
 };
@@ -64,6 +105,15 @@ submit.addEventListener("click", (e) => {
   e.preventDefault();
   getWeather(city.value);
 });
+
+// Event listener for recent cities dropdown
+recentCitiesDropdown.addEventListener("change", (e) => {
+  const selectedCity = e.target.value;
+  getWeather(selectedCity);
+});
+
+// Initialize recent cities dropdown
+initializeRecentCities();
 
 getWeather("delhi");
 

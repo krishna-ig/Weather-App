@@ -31,6 +31,13 @@
                             </svg></button>
                     </li>
                 </ul>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li>
+                        <select id="recent-cities" class="btn btn-outline-success" style="display: none;">
+                            <option value="" disabled selected>Select a recent city</option>
+                        </select>
+                    </li>
+                </ul>
                 <form class="d-flex" role="search">
                     <input id="city" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit" id="submit">Search</button>
@@ -100,7 +107,7 @@
                 </div>
             </div>
 
-            <h2 class="display-6 text-center mb-4">Weather of next 3 days</h2>
+            <h1 class=" text-center mb-4">Weather Forecast of next 3 days</h1>
 
             <div class="table-responsive">
                 <table id="forecast" class="table text-center">
